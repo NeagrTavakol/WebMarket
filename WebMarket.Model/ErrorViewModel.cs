@@ -1,4 +1,4 @@
-namespace WebMarket.web.Models
+namespace WebMarket.Models
 {
     public class ErrorViewModel
     {

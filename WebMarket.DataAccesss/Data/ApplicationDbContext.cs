@@ -1,7 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using WebMarket.web.Models;
+using WebMarket.Models;
 
-namespace WebMarket.web.Data
+
+
+namespace WebMarket.DataAccess
 {
     public class ApplicationDbContext:DbContext
     {

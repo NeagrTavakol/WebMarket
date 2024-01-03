@@ -1,5 +1,5 @@
 using Microsoft.EntityFrameworkCore;
-using WebMarket.web.Data;
+using WebMarket.DataAccess;
 
 var builder = WebApplication.CreateBuilder(args);
 

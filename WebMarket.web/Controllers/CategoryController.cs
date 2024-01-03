@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System.Collections;
-using WebMarket.web.Data;
-using WebMarket.web.Models;
+using WebMarket.DataAccess;
+using WebMarket.Models;
 
 namespace WebMarket.web.Controllers
 {
