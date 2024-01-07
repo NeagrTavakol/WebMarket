@@ -1,20 +1,21 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System.Collections;
 using WebMarket.DataAccess;
+using WebMarket.DataAccesss.Repository.IRepository;
 using WebMarket.Models;
 
 namespace WebMarket.web.Controllers
 {
     public class CategoryController : Controller
     {
-        private readonly ApplicationDbContext _db;
-        public CategoryController(ApplicationDbContext db)
+        private readonly ICategoryRepository _db;
+        public CategoryController(ICategoryRepository db)
         {
             _db = db;
         }
         public IActionResult Index()
         {
-            IEnumerable CategoryList = _db.categories;
+            IEnumerable CategoryList = _db.GetAll();
             return View(CategoryList);
         }
         //Get
@@ -34,8 +35,8 @@ namespace WebMarket.web.Controllers
             }
             if (ModelState.IsValid)
             {
-                _db.categories.Add(obj);
-                _db.SaveChanges();
+                _db.Add(obj);
+                _db.Save();
                 TempData["succes"] = "دسته جدید با موفقیت ایجاد شد";
                 return RedirectToAction("Index");
             }
@@ -51,12 +52,13 @@ namespace WebMarket.web.Controllers
             {
                 return NotFound();
             }
-            var categoryFromDb = _db.categories.Find(id);
-            if(categoryFromDb == null)
+            //var categoryFromDb = _db.categories.Find(id);
+            var CategoryFromDbFirst = _db.GetFirstOrDefault(u => u.Id == id);
+            if(CategoryFromDbFirst == null)
             {
                 return NotFound();
             }
-            return View(categoryFromDb);
+            return View(CategoryFromDbFirst);
         }
         //Post
         [HttpPost]
@@ -68,8 +70,8 @@ namespace WebMarket.web.Controllers
             }
             if (ModelState.IsValid)
             {
-                _db.categories.Update(obj);
-                _db.SaveChanges();
+                _db.Update(obj);
+                _db.Save();
                 TempData["succes"] = "دسته با موفقیت ویرایش شد";
                 return RedirectToAction("Index");
             }
@@ -84,7 +86,7 @@ namespace WebMarket.web.Controllers
             {
                 return NotFound();
             }
-            var categoryFromDb = _db.categories.Find(id);
+            var categoryFromDb = _db.GetFirstOrDefault(u => u.Id==id);
             if (categoryFromDb == null)
             {
                 return NotFound();
@@ -95,9 +97,9 @@ namespace WebMarket.web.Controllers
         [HttpPost]
         public IActionResult DeletePost(int? id)
         {
-            var obj = _db.categories.Find(id);
-            _db.categories.Remove(obj);
-            _db.SaveChanges();
+            var obj = _db.GetFirstOrDefault(u => u.Id == id);
+            _db.Remove(obj);
+            _db.Save();
             TempData["succes"] = "دسته با موفقیت حذف شد";
             return RedirectToAction("Index");
 
