@@ -8,14 +8,14 @@ namespace WebMarket.web.Controllers
 {
     public class CategoryController : Controller
     {
-        private readonly ICategoryRepository _db;
-        public CategoryController(ICategoryRepository db)
+        private readonly IUnitOfWork _db;
+        public CategoryController(IUnitOfWork db)
         {
             _db = db;
         }
         public IActionResult Index()
         {
-            IEnumerable CategoryList = _db.GetAll();
+            IEnumerable CategoryList = _db.Category.GetAll();
             return View(CategoryList);
         }
         //Get
@@ -35,7 +35,7 @@ namespace WebMarket.web.Controllers
             }
             if (ModelState.IsValid)
             {
-                _db.Add(obj);
+                _db.Category.Add(obj);
                 _db.Save();
                 TempData["succes"] = "دسته جدید با موفقیت ایجاد شد";
                 return RedirectToAction("Index");
@@ -53,7 +53,7 @@ namespace WebMarket.web.Controllers
                 return NotFound();
             }
             //var categoryFromDb = _db.categories.Find(id);
-            var CategoryFromDbFirst = _db.GetFirstOrDefault(u => u.Id == id);
+            var CategoryFromDbFirst = _db.Category.GetFirstOrDefault(u => u.Id == id);
             if(CategoryFromDbFirst == null)
             {
                 return NotFound();
@@ -70,7 +70,7 @@ namespace WebMarket.web.Controllers
             }
             if (ModelState.IsValid)
             {
-                _db.Update(obj);
+                _db.Category.Update(obj);
                 _db.Save();
                 TempData["succes"] = "دسته با موفقیت ویرایش شد";
                 return RedirectToAction("Index");
@@ -86,7 +86,7 @@ namespace WebMarket.web.Controllers
             {
                 return NotFound();
             }
-            var categoryFromDb = _db.GetFirstOrDefault(u => u.Id==id);
+            var categoryFromDb = _db.Category.GetFirstOrDefault(u => u.Id==id);
             if (categoryFromDb == null)
             {
                 return NotFound();
@@ -97,8 +97,8 @@ namespace WebMarket.web.Controllers
         [HttpPost]
         public IActionResult DeletePost(int? id)
         {
-            var obj = _db.GetFirstOrDefault(u => u.Id == id);
-            _db.Remove(obj);
+            var obj = _db.Category.GetFirstOrDefault(u => u.Id == id);
+            _db.Category.Remove(obj);
             _db.Save();
             TempData["succes"] = "دسته با موفقیت حذف شد";
             return RedirectToAction("Index");
