@@ -1,21 +1,21 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System.Collections;
-using WebMarket.DataAccess;
-using WebMarket.DataAccesss.Repository.IRepository;
+using WebMarket.DataAccesss.Services.Interface;
 using WebMarket.Models;
 
-namespace WebMarket.web.Controllers
+namespace WebMarket.web.Areas.Admin.Controllers
 {
+    [Area("Admin")]
     public class CategoryController : Controller
     {
-        private readonly IUnitOfWork _db;
-        public CategoryController(IUnitOfWork db)
+        private readonly ICategoryService _categoryService;
+        public CategoryController(ICategoryService categoryService)
         {
-            _db = db;
+            _categoryService = categoryService;
         }
         public IActionResult Index()
         {
-            IEnumerable CategoryList = _db.Category.GetAll();
+            IEnumerable CategoryList = _categoryService.GetAll();
             return View(CategoryList);
         }
         //Get
@@ -29,32 +29,32 @@ namespace WebMarket.web.Controllers
         [HttpPost]
         public IActionResult Create(Category obj)
         {
-            if(obj.Name == obj.DisplayOrder.ToString())
+            if (obj.Name == obj.DisplayOrder.ToString())
             {
                 ModelState.AddModelError("Name", "مقدار ترتیب نمایش نباید با مقدار نام برابر باشد");
             }
             if (ModelState.IsValid)
             {
-                _db.Category.Add(obj);
-                _db.Save();
+                _categoryService.Add(obj);
+                _categoryService.Save();
                 TempData["succes"] = "دسته جدید با موفقیت ایجاد شد";
                 return RedirectToAction("Index");
             }
             return View(obj);
-            
+
         }
 
         //Get
         [HttpGet]
         public IActionResult Edit(int? id)
         {
-            if(id == null || id == 0)
+            if (id == null || id == 0)
             {
                 return NotFound();
             }
             //var categoryFromDb = _db.categories.Find(id);
-            var CategoryFromDbFirst = _db.Category.GetFirstOrDefault(u => u.Id == id);
-            if(CategoryFromDbFirst == null)
+            var CategoryFromDbFirst = _categoryService.GetFirstOrDefault(u => u.Id == id);
+            if (CategoryFromDbFirst == null)
             {
                 return NotFound();
             }
@@ -70,8 +70,8 @@ namespace WebMarket.web.Controllers
             }
             if (ModelState.IsValid)
             {
-                _db.Category.Update(obj);
-                _db.Save();
+                _categoryService.Update(obj);
+                _categoryService.Save();
                 TempData["succes"] = "دسته با موفقیت ویرایش شد";
                 return RedirectToAction("Index");
             }
@@ -86,7 +86,7 @@ namespace WebMarket.web.Controllers
             {
                 return NotFound();
             }
-            var categoryFromDb = _db.Category.GetFirstOrDefault(u => u.Id==id);
+            var categoryFromDb = _categoryService.GetFirstOrDefault(u => u.Id == id);
             if (categoryFromDb == null)
             {
                 return NotFound();
@@ -97,9 +97,9 @@ namespace WebMarket.web.Controllers
         [HttpPost]
         public IActionResult DeletePost(int? id)
         {
-            var obj = _db.Category.GetFirstOrDefault(u => u.Id == id);
-            _db.Category.Remove(obj);
-            _db.Save();
+            var obj = _categoryService.GetFirstOrDefault(u => u.Id == id);
+            _categoryService.Remove(obj);
+            _categoryService.Save();
             TempData["succes"] = "دسته با موفقیت حذف شد";
             return RedirectToAction("Index");
 

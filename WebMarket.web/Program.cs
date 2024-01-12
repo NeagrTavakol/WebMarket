@@ -1,7 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using WebMarket.DataAccess;
-using WebMarket.DataAccesss.Repository;
-using WebMarket.DataAccesss.Repository.IRepository;
+using WebMarket.DataAccesss.Services;
+using WebMarket.DataAccesss.Services.Interface;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -9,7 +9,9 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllersWithViews();
 builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(
     builder.Configuration.GetConnectionString("DefaultConnection")));
-builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+
+builder.Services.AddScoped<ICategoryService, CategoryService>();
+builder.Services.AddScoped <ICoverTypeService,CoverTypeService>();
 
 var app = builder.Build();
 
@@ -30,6 +32,6 @@ app.UseAuthorization();
 
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}");
+    pattern: "{area=Customer}/{controller=Home}/{action=Index}/{id?}");
 
 app.Run();
