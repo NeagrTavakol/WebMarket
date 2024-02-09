@@ -28,11 +28,13 @@ namespace WebMarket.DataAccesss.Services
         public void Remove(Product entity)
         {
             _db.Products.Remove(entity);
+            _db.SaveChanges();
         }
 
         public void RemoveRange(IEnumerable<Product> entities)
         {
             _db.Products.RemoveRange(entities);
+            _db.SaveChanges();
         }
 
         public Product GetFirstOrDefault(Expression<Func<Product, bool>> filter)

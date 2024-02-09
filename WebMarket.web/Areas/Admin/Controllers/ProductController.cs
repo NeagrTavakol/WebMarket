@@ -94,7 +94,7 @@ namespace WebMarket.web.Areas.Admin.Controllers
                     {
                         file.CopyTo(filestrems);
                     }
-                    obj.Product.ImgeUrl = @"\images\products\" + fileName + extenstion;
+                    obj.Product.ImgeUrl = fileName + extenstion;
             }
                 if(obj.Product.Id==0) _productService.Add(obj);
                 else _productService.Update(obj.Product);
